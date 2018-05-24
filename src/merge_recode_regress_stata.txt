@@ -1,0 +1,171 @@
+
+
+*****IN STATA
+
+##set working directory to wherever the .zip file has been extracted
+##cd "  "
+
+set mem 11000000
+set more off
+
+insheet using "results\maxflow.csv", comma
+rename source_ccode ccode1
+rename target_ccode ccode2
+sort ccode1 ccode2 year
+egen a = group(ccode1 ccode2)
+egen b = group(ccode2 ccode1)
+egen c = rowmin(a b)
+egen dyadyear = group(year c)
+sort dyadyear
+by dyadyear: egen meanmaxflow=mean(maxflow)
+keep ccode1 ccode2 year meanmaxflow
+rename meanmaxflow maxflow
+save "data\maxflow.dta", replace
+clear
+
+insheet using "results\dyads_0.6.csv", comma
+rename ccode_x ccode1
+rename ccode_y ccode2
+rename same_comm samecomm_low
+sort ccode1 ccode2 year
+save "results\stc_low.dta", replace
+clear
+
+insheet using "results\dyads_1.1.csv", comma
+rename ccode_x ccode1
+rename ccode_y ccode2
+rename same_comm samecomm_medium
+sort ccode1 ccode2 year
+save "results\stc_med.dta", replace
+clear
+
+insheet using "results\dyads_1.7.csv", comma
+rename ccode_x ccode1
+rename ccode_y ccode2
+rename same_comm samecomm_high
+save "results\stc_high.dta", replace
+
+sort ccode1 ccode2 year
+merge ccode1 ccode2 year using "results\stc_low.dta", unique
+drop _merge
+
+sort ccode1 ccode2 year
+merge ccode1 ccode2 year using "results\stc_med.dta", unique
+drop _merge
+
+sort ccode1 ccode2 year
+merge ccode1 ccode2 year using "data\dependence.dta", unique
+drop _merge
+
+sort  ccode1 ccode2 year
+merge ccode1 ccode2 year using "data\maxflow.dta", unique sort
+drop _merge
+
+sort  ccode1 ccode2 year
+merge ccode1 ccode2 year using "data\igos.dta", unique
+drop _merge
+
+sort ccode1 ccode2 year
+merge ccode1 ccode2 year using "data\eugene2.dta", unique
+drop _merge
+
+drop if igos==.
+
+generate contiguous=1 if contig<6
+replace contiguous=0 if contig==6
+
+gen logdist=log(distance)
+replace logdist=0 if distance==0
+
+gen allies=1 if alliance<4
+replace allies=0 if alliance==4
+
+gen majpow=1 if majpow1==1
+replace majpow=0 if majpow1==0
+replace majpow=1 if majpow2==1
+
+gen highcap= max(cap_1,cap_2)
+gen lowcap= min(cap_1,cap_2)
+gen capratio =  highcap/lowcap
+gen logcapratio = log(capratio)
+
+
+replace democ1=. if democ1==-66
+replace democ2=. if democ2==-66
+
+replace democ1=0 if democ1==-77
+replace democ2=0 if democ2==-77
+
+replace democ1=. if democ1==-88
+replace democ2=. if democ2==-88
+
+gen demochigh = max(democ1,democ2)
+gen democlow = min(democ1,democ2)
+
+gen dependhigh = max(depabgled,depbagled)
+gen dependlow = min(depabgled,depbagled)
+
+gen lngdphigh = ln(max(gdpa,gdpb))
+gen lngdplow = ln(min(gdpa,gdpb))
+
+egen id = concat(ccode1 ccode2), punct(000)
+destring id, replace
+tsset id year
+gen mzmidplusone = F.mzmid
+
+btscs mzmidplusone year id, g(peaceyears) nspline(3)
+
+gen stc_low=1 if samecomm_low=="True"
+replace stc_low=0 if samecomm_low=="False"
+
+gen stc_med=1 if samecomm_medium=="True"
+replace stc_med=0 if samecomm_medium=="False"
+
+gen stc_high=1 if samecomm_high=="True"
+replace stc_high=0 if samecomm_high=="False"
+
+drop if ccode1==731
+drop if ccode2==731
+
+keep ccode1 ccode2 year mzmidplusone stc_low stc_med stc_high dependlow maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears mzongo
+
+save "results\final.dta", replace
+
+###MAIN MODELS
+
+label variable stc_low `"Same Trading Community"'
+label variable stc_med `"Same Trading Community"'
+label variable stc_high `"Same Trading Community"'
+label variable dependlow `"Dyadic Trade Dependence Low"'
+label variable maxflow `"MaxFlow"'
+label variable lngdphigh `"GDP High"'
+label variable lngdplow  `"GDP Low"'
+label variable demochigh `"Democracy High"'
+label variable democlow `"Democracy Low"'
+label variable igos `"Shared IGO Memberships"'
+label variable contiguous `"Contiguity"'
+label variable logdist `"Distance (logged)"'
+label variable majpow `"Major Power"'
+label variable allies `"Alliance"'
+label variable logcapratio `"Capability Ratio (logged)"'
+label variable peaceyears `"Peaceyears"'
+
+
+logit mzmidplusone stc_low dependlow maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears, robust, if mzongo~=1
+eststo model1
+logit mzmidplusone stc_low maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears, robust, if mzongo~=1
+eststo model2
+
+logit mzmidplusone stc_med dependlow maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears, robust, if mzongo~=1
+eststo model3
+logit mzmidplusone stc_med maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears, robust, if mzongo~=1
+eststo model4
+
+logit mzmidplusone stc_high dependlow maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears, robust, if mzongo~=1
+eststo model5
+logit mzmidplusone stc_high maxflow lngdphigh lngdplow demochigh democlow igos contiguous logdist majpow allies logcapratio _spline1 _spline2 _spline3 peaceyears, robust, if mzongo~=1
+eststo model6
+
+esttab using results\myfile.tex, se eqlabels(none) b(3) se(3) label replace
+
+

@@ -1,0 +1,165 @@
+\documentclass[11pt,fleqn]{article}
+\setlength{\textheight}{9 in} \setlength{\textwidth}{6.5 in}
+\setlength{\topmargin}{0 in} \setlength{\headheight}{0 in}
+\setlength{\headsep}{0 in} \setlength{\footskip}{.4 in}
+\setlength{\oddsidemargin}{0 in}
+\usepackage{appendix}
+\usepackage{tabularx} % allows text-wrapping in tables
+\usepackage{graphicx} % allows including graphics
+\usepackage{setspace} % allows double-spacing
+\usepackage{indentfirst} % indents first paragraph in a section
+\usepackage{natbib} % bibliography
+\bibpunct{(}{)}{;}{a}{}{,}
+\bibliographystyle{apsr}
+\usepackage{bm,longtable}
+\usepackage{amsthm,amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{subfigure}
+\usepackage{psfrag}
+\usepackage{ifvtex}
+\usepackage{epstopdf}
+
+
+
+\begin{document}
+
+\newcommand{\fn}[1]{\footnote{\raggedright #1}}
+\renewcommand{\thefootnote}{\fnsymbol{footnote} }
+\setlength{\footnotesep}{13pt}
+
+\makeatletter
+\def\s@btitle{\relax}
+\def\subtitle#1{\gdef\s@btitle{#1}}
+\def\@maketitle{%
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE \@title \par}%
+                \if\s@btitle\relax
+                \else\typeout{[subtitle]}%
+                        \vskip .5pc
+                        \begin{large}%
+                                \bf \emph \textsl{\s@btitle}%
+                                \par
+                        \end{large}%
+                \fi
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}%
+        \@author
+      \end{tabular}\par}%
+    \vskip 1em%
+    {\@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+\makeatother
+
+
+
+\title{\textbf{Trading Communities, the Networked Structure of International Relations and the Kantian Peace}\\
+\ \\
+ \textbf{ERRATUM}\\}
+
+\author{Yonatan Lupu\\
+\\
+Vincent A. Traag\\}
+
+
+\rmfamily \raggedright \allowdisplaybreaks
+\setlength{\parindent}{.5in}
+\setlength{\bibhang}{.5in}
+\maketitle
+
+\renewcommand{\thefootnote}{\arabic{footnote} }
+
+\doublespacing
+
+The results reported in \citet{lupu2013trading} are in error.  The error most likely resulted from a coding error made while merging data from various sources and/or re-coding some of these original data (as described in the article).  Some of the command code we used originally has been lost, so we do not know the exact nature of the error.  We have re-constructed the code needed to perform all of the analysis and obtained the results below.  The corrected results are reported below.
+
+Unfortunately, these results are not consistent with those in the published article.  At all three resolutions, we find a positive coefficient for {\sc Same Trading Community}, meaning that we do not find support for our hypothesis.  We encourage readers to take these corrected results into account when citing the article in the future.  Along with this erratum we include a full package of data and command code to replicate each step of the analysis.  Please read the file ``README.md'' before proceeding.
+ 
+Table \ref{tab:regression1} contains the direct output from the command code included in the replication package.  Table \ref{tab:regression2} contains the same results with several aesthetic modifications to improve readability.
+
+\begin{table}[!h]
+\tiny
+\begin{center}
+\begin{singlespace}
+  \caption{Logit Models of {\sc MaozMIDs}}
+  \label{tab:regression1}
+\input{results/myfile.tex})
+\end{singlespace}
+\end{center}
+\end{table}
+
+\begin{table}[!h]
+\small
+\begin{center}
+\begin{singlespace}
+  \caption{Logit Models of {\sc MaozMIDs}}
+  \label{tab:regression2}
+\begin{tabularx}{7.1in}{lcccccc}
+\hline \hline
+ & \multicolumn{2}{X}{\textbf{Low Resolution}} & \multicolumn{2}{X}{\textbf{Med. Resolution}} & \multicolumn{2}{X}{\textbf{High Resolution}}\\
+\hline \hline
+\textbf{Variable} & \textbf{Model 1} & \textbf{Model 2} & \textbf{Model 3} & \textbf{Model 4} & \textbf{Model 5} & \textbf{Model 6}\\
+\hline
+Same Trading Community    &        0.117         &       0.128 &    0.095         &       0.086    &        0.347***&       0.319***   \\
+            &   (0.093)         &     (0.091)         &   (0.087)         &     (0.086)        &    (0.092)         &     (0.091)         \\
+Dyadic Trade Dependence Low &   -10.687        &     ------       &      -10.918         &       ------               &     -12.909          &   ------                   \\
+            &     (8.491)         &                     &     (8.609)         &                     &     (9.219)          &                     \\
+MaxFlow               &      -1.018         &      -1.200*  &      -1.034         &      -1.220** &      -0.967         &      -1.244** \\
+                    &     (0.533)         &     (0.468)         &     (0.532)         &     (0.466)         &     (0.533)         &     (0.466)         \\
+GDP High  &       0.215***&       0.241***&       0.215***&       0.242***&       0.200***&       0.234***\\
+                    &     (0.044)         &     (0.039)         &     (0.044)         &     (0.039)         &     (0.045)         &     (0.039)                  \\
+GDP Low             &       0.094** &       0.075*  &       0.091** &       0.072*  &       0.105** &       0.081*  \\
+                    &     (0.034)         &     (0.032)         &     (0.034)         &     (0.032)         &     (0.034)         &     (0.032)         \\
+
+Democracy High      &       0.019         &       0.018         &       0.019         &       0.018         &       0.018         &       0.017         \\
+                    &     (0.012)         &     (0.012)         &     (0.012)         &     (0.012)         &     (0.012)         &     (0.012)         \\
+
+Democracy Low       &      -0.121***&      -0.127***&      -0.120***&      -0.126***&      -0.120***&      -0.126***\\
+                    &     (0.018)         &     (0.017)         &     (0.018)         &     (0.017)         &     (0.018)         &     (0.017)         \\
+
+Shared IGO Memberships&       0.008         &       0.006         &       0.008         &       0.006         &       0.008         &       0.006         \\
+                    &     (0.004)         &     (0.004)         &     (0.004)         &     (0.004)         &     (0.004)         &     (0.004)         \\
+
+Contiguity          &       2.697***&       2.725***&       2.708***&       2.740***&       2.631***&       2.667***\\
+                    &     (0.175)         &     (0.176)         &     (0.173)         &     (0.174)         &     (0.176)         &     (0.176)         \\
+
+Distance (logged)   &      -0.183***&      -0.180***&      -0.182***&      -0.179***&      -0.181***&      -0.177***\\
+                    &     (0.018)         &     (0.018)         &     (0.018)         &     (0.018)         &     (0.018)         &     (0.018)         \\
+
+Major Power         &       0.781***&       0.746***&       0.785***&       0.749***&       0.834***&       0.788***\\
+                    &     (0.126)         &     (0.120)         &     (0.126)         &     (0.120)         &     (0.129)         &     (0.121)         \\
+
+Alliance            &      -0.055         &      -0.098         &      -0.046         &      -0.089         &      -0.086         &      -0.130         \\
+                    &     (0.111)         &     (0.108)         &     (0.111)         &     (0.108)         &     (0.110)         &     (0.107)         \\
+
+Capability Ratio (logged)&      -0.162***&      -0.167***&      -0.162***&      -0.168***&      -0.162***&      -0.168***\\
+                    &     (0.031)         &     (0.030)         &     (0.031)         &     (0.030)         &     (0.031)         &     (0.031)         \\
+Peaceyears  &      -0.368***&      -0.363***&      -0.368***&      -0.362***&      -0.366***&      -0.361***\\
+                    &     (0.032)         &     (0.032)         &     (0.032)         &     (0.032)         &     (0.032)         &     (0.032)             \\
+
+Constant            &      -7.023***&      -7.110***&      -6.988***&      -7.064***&      -7.001***&      -7.099***\\
+                    &     (0.310)         &     (0.303)         &     (0.309)         &     (0.302)         &     (0.305)         &     (0.297)         \\
+N &     394,527         &      399,868         &      394,527         &      399,868         &      394,527         &      399,868          \\
+\hline \hline
+\end{tabularx}
+\begin{tabularx}{7.1in}{lcccccc}
+\multicolumn{5}{X}{Standard errors in parentheses.}\\
+\multicolumn{5}{l}{* \(p<0.05\), ** \(p<0.01\), *** \(p<0.001\)}\\
+\multicolumn{5}{X}{Estimates for 3 temporal spline variables not reported.}\\
+\end{tabularx}
+\end{singlespace}
+\end{center}
+\end{table}
+
+\normalsize
+
+\clearpage
+\bibliography{Lupu_Traag_Erratum}
+
+\end{document}
