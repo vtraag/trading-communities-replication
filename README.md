@@ -2,6 +2,8 @@
 
 This repository contains the data and code needed to replicate the results in the erratum to [Lupu and Traag (2013)](http://journals.sagepub.com/doi/abs/10.1177/0022002712453708).
 
+[![DOI](https://zenodo.org/badge/134671832.svg)](https://zenodo.org/badge/latestdoi/134671832)
+
 ## Overview
 
 Please clone using `git clone` or [download](https://github.com/vtraag/trading-communities-replication/archive/master.zip) the zipped repository and unzip to your desired location.
